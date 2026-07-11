@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pookie's Guessing Game ✨</title>
+    <!-- Beautiful Google Font for Aesthetic Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght=600;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body { 
+            background: #fff0f5; /* Soft Lavender Blush Base */
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            font-family: 'Quicksand', sans-serif; 
+            color: #ff69b4; /* Deep Pink */
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        /* Ambient Glow utilizing Screen 1 Image - Soft blur effect */
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: var(--bg-image, none);
+            background-size: cover;
+            background-position: center;
+            filter: blur(20px) saturate(1.6) opacity(0.5);
+            z-index: -1;
+        }
+
+        /* Sparkly subtle overlay pattern */
+        body::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.6) 10%, transparent 80%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .status { 
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+            color: #ff4791;
+            margin-bottom: 30px; 
+            text-align: center;
+            text-shadow: 0 4px 10px rgba(255, 71, 145, 0.2);
+            letter-spacing: 0.5px;
+        }
+
+        /* Perfect 3x3 Grid */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px; 
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .circle-box {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 3px dashed #ffb6c1; /* Soft pastel pink border */
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 10px 20px rgba(255, 182, 193, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 900;
+            padding: 8px;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s, background-color 0.3s;
+        }
+
+        /* Cute responsive message states inside boxes */
+        .circle-box.wrong-guess {
+            color: #ff4757;
+            background-color: #ffeae2 !important;
+            border: 3px solid #ff4757;
+            text-shadow: none;
+        }
+
+        .circle-box.right-guess {
+            color: #2ed573;
+            background-color: #e3fcef !important;
+            border: 3px solid #2ed573;
+            text-shadow: none;
+        }
+
+        @media (hover: hover) {
+            .circle-box:hover {
+                transform: scale(1.08) rotate(2deg);
+                border-color: #ff69b4;
+                background-color: #ffffff;
+            }
+        }
+
+        .circle-box:active {
+            transform: scale(0.92);
+        }
+
+        /* Soft Aesthetic Modal Popover with smooth transition */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            background: rgba(255, 240, 245, 0.85); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            inset: 0; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 100;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .content { 
+            background: #ffffff; 
+            padding: 25px; 
+            border-radius: 24px; 
+            text-align: center; 
+            max-width: 320px;
+            width: 100%;
+            border: 3px solid #ffb6c1;
+            box-shadow: 0 20px 40px rgba(255, 105, 180, 0.15);
+            transform: scale(0.7);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal.show .content {
+            transform: scale(1);
+        }
+
+        /* TRY AGAIN GIF CONTAINER */
+        .gif-wrapper {
+            width: 100%;
+            height: 150px;
+            margin: 15px auto;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff0f5;
+            border: 2px dotted #ffb6c1;
+        }
+
+        .gif-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #msg {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.3rem;
+            color: #ff4791;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .content button {
+            background: linear-gradient(135deg, #ff69b4, #ff4791);
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 900;
+            border-radius: 30px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 6px 15px rgba(255, 71, 145, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .content button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 71, 145, 0.4);
+        }
+
+        /* Flying Emojis Styles with super smooth flow */
+        .emoji-fly {
+            position: absolute;
+            bottom: -50px;
+            font-size: 2rem;
+            pointer-events: none;
+            z-index: 99;
+            animation: floatUp 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg) scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-105vh) translateX(var(--x-move)) rotate(var(--rot-move)) scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .status { font-size: 1.5rem; margin-bottom: 20px; }
+            .grid { gap: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hidden Audio Tag for Auto Background Music -->
+<audio id="bg-music" src="audio.mp3" loop preload="auto"></audio>
+
+<h2 class="status">Guess kro image kon sy Circle mein gyeee...🙂</h2>
+
+<div class="grid">
+    <div class="circle-box" onclick="checkGuess(0, this)"></div>
+    <div class="circle-box" onclick="checkGuess(1, this)"></div>
+    <div class="circle-box" onclick="checkGuess(2, this)"></div>
+    <div class="circle-box" onclick="checkGuess(3, this)"></div>
+    <div class="circle-box" onclick="checkGuess(4, this)"></div>
+    <div class="circle-box" onclick="checkGuess(5, this)"></div>
+    <div class="circle-box" onclick="checkGuess(6, this)"></div>
+    <div class="circle-box" onclick="checkGuess(7, this)"></div>
+    <div class="circle-box" onclick="checkGuess(8, this)"></div>
+</div>
+
+<!-- Popover Modal for Results -->
+<div id="popover" class="modal">
+    <div class="content">
+        <p id="msg"></p>
+        
+        <div class="gif-wrapper">
+            <img id="modal-gif" src="./images/cute1.png" alt="Cute reaction">
+        </div>
+
+        <button id="modal-btn" onclick="handleAction()">Okahhhh!🙂</button>
+    </div>
+</div>
+
+<script>
+    let target;
+    const boxes = document.querySelectorAll('.circle-box');
+    const img = localStorage.getItem('birthdayPhoto');
+    let isCorrect = false;
+
+    // List of cute dynamic texts when user clicks a wrong circle box
+    const wrongMessages = [
+        "Nahhh ap sy nah ho pia ga...😂",
+        "Again try kr loo kia pta ho jye 🙈",
+        "Kareeb hoo bhttt 😂😂",
+        "Lagta hnn khana nhi khyia aj 😂",
+        "nahhh baba nahhh...Shi image find kro 😂😂",
+        "Is mein to kabi be nhii ho skta tha... pagal 🙂🙂"
+    ];
+
+    if (img) {
+        document.body.style.setProperty('--bg-image', `url(${img})`);
+    }
+
+    function initGame() {
+        target = Math.floor(Math.random() * 9);
+        isCorrect = false;
+
+        boxes.forEach(b => {
+            b.innerText = ""; 
+            b.className = "circle-box"; 
+            b.style.borderStyle = "dashed";
+            if (img) b.style.backgroundImage = `url(${img})`;
+            else b.style.backgroundColor = 'rgba(255, 182, 193, 0.4)';
+        });
+        
+        setTimeout(() => {
+            boxes.forEach(b => {
+                b.style.backgroundImage = 'none';
+            });
+        }, 1000);
+
+        // Try playing audio as soon as interactions happen or window loads
+        playMusic();
+    }
+
+    // Modern browser workaround to ensure autoplay runs smoothly
+    function playMusic() {
+        const music = document.getElementById('bg-music');
+        music.play().catch(() => {
+            // If browser blocks it, play on the very first touch/click event securely
+            document.addEventListener('click', () => { music.play(); }, { once: true });
+        });
+    }
+
+    window.onload = initGame;
+
+    function spawnEmojis() {
+        const cuteEmojis = ['🌸', '💖', '✨', '🎀', '🧸', '🎈', '🍭'];
+        for (let i = 0; i < 25; i++) {
+            setTimeout(() => {
+                const emoji = document.createElement('div');
+                emoji.className = 'emoji-fly';
+                emoji.innerText = cuteEmojis[Math.floor(Math.random() * cuteEmojis.length)];
+                emoji.style.left = Math.random() * 100 + 'vw';
+                emoji.style.setProperty('--x-move', (Math.random() * 200 - 100) + 'px');
+                emoji.style.setProperty('--rot-move', (Math.random() * 360) + 'deg');
+                emoji.style.animationDuration = (Math.random() * 1.5 + 2) + 's';
+                
+                document.body.appendChild(emoji);
+                setTimeout(() => emoji.remove(), 3500);
+            }, i * 60);
+        }
+    }
+
+    function checkGuess(idx, element) {
+        if (element.innerText !== "") return;
+
+        const modal = document.getElementById('popover');
+        const modalBtn = document.getElementById('modal-btn');
+
+        if (idx === target) {
+            isCorrect = true;
+            element.innerText = "Smart Girl! 🎉";
+            element.classList.add('right-guess');
+            element.style.borderStyle = "solid";
+            if (img) element.style.backgroundImage = `url(${img})`;
+
+            spawnEmojis();
+
+            setTimeout(() => {
+                document.getElementById('msg').innerText = "Kia bat hnn SHukar hn Mil gyiaa 😂😂";
+                modalBtn.innerText = "VIEW GIFT CARD🎁";
+                document.getElementById('modal-gif').src = "./images/victory.png"; 
+                modal.classList.add('show');
+            }, 600);
+
+        } else {
+            element.innerText = "Glat...😁";
+            element.classList.add('wrong-guess');
+            element.style.borderStyle = "solid";
+
+            setTimeout(() => {
+                // Select an absolute random taunt from the array list cleanly
+                const randomTaunt = wrongMessages[Math.floor(Math.random() * wrongMessages.length)];
+                document.getElementById('msg').innerText = randomTaunt;
+                modalBtn.innerText = "Dubaraa... kro 😂";
+                document.getElementById('modal-gif').src = "./images/laying.png"; 
+                modal.classList.add('show');
+            }, 500);
+        }
+    }
+
+    function handleAction() {
+        const modal = document.getElementById('popover');
+        if (isCorrect) {
+            window.location.href = 'screen3.html';
+        } else {
+            modal.classList.remove('show');
+        }
+    }
+</script>
+
+</body>
+</html>

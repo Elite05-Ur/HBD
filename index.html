@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayesha's Birthday Surprise ✨</title>
+    <!-- Playful and Aesthetic Cute Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@600;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Quicksand', sans-serif; 
+        }
+
+        :root {
+            --theme-color: #ffb6c1; /* Default Pastel Light Pink */
+        }
+
+        body {
+            background-color: #fff0f5; /* Lavender Blush elegant base */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            transition: background-color 0.8s ease;
+        }
+
+        /* Ambient Dynamic Background Effect based on uploaded memory */
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: var(--bg-image, none);
+            background-size: cover;
+            background-position: center;
+            filter: blur(40px) saturate(1.5) opacity(0.5);
+            z-index: 1;
+            transition: background-image 0.8s ease;
+        }
+
+        /* Sparkly subtle overlay gradient */
+        body::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.7) 20%, transparent 80%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .glass-overlay {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+            padding: 20px;
+        }
+
+        /* Cozy Aesthetic Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 3px solid rgba(255, 255, 255, 0.6);
+            padding: 2.5rem 2rem;
+            border-radius: 32px;
+            text-align: center;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 20px 40px rgba(255, 105, 180, 0.12), 
+                        inset 0 0 20px rgba(255, 255, 255, 0.3);
+            transform: translateY(0);
+            animation: floatCard 4s ease-in-out infinite;
+        }
+
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.2rem;
+            color: #ff4791;
+            margin-bottom: 12px;
+            text-shadow: 0 4px 8px rgba(255, 71, 145, 0.15);
+        }
+
+        p {
+            font-size: 1rem;
+            color: #ff69b4;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            padding: 0 10px;
+        }
+
+        /* Cute Pookie Styled Upload Button */
+        .upload-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #ff69b4, #ff4791);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            font-weight: 900;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 8px 20px rgba(255, 71, 145, 0.3);
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
+        }
+
+        .upload-btn:hover {
+            transform: scale(1.04);
+            box-shadow: 0 10px 25px rgba(255, 71, 145, 0.45);
+        }
+
+        .upload-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Mobile specific enhancements */
+        @media (max-width: 480px) {
+            h1 { font-size: 1.9rem; }
+            .glass-card { padding: 2rem 1.5rem; border-radius: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass-overlay">
+        <div class="glass-card">
+            <h1>Happy Birthday Ayesha🙂</h1>
+            <strong>  12 july 2026</strong>
+            <p>Ak chota sa Surprise hn... ap ko Birthday wish krna k lyia🙂</p>
+             <label for="photoInput" class="upload-btn">
+                <span>idr apni Image doo🙂</span>
+                <input type="file" id="photoInput" accept="image/*" hidden>
+            </label>
+        </div>
+    </div>
+
+    <script>
+        const photoInput = document.getElementById('photoInput');
+
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const img = new Image();
+                img.src = event.target.result;
+                
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    
+                    // Exact original image color processing logic
+                    const pixel = ctx.getImageData(10, 10, 1, 1).data;
+                    const color = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
+                    
+                    // Save color and original data string securely to LocalStorage
+                    localStorage.setItem('themeColor', color);
+                    localStorage.setItem('birthdayPhoto', event.target.result);
+                    
+                    // Realtime transition feel injection
+                    applyTheme(color, event.target.result);
+                    
+                    // Controlled delay for smooth transition layout execution
+                    setTimeout(() => { 
+                        window.location.href = 'screen2.html'; 
+                    }, 600);
+                };
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function applyTheme(color, imageSrc) {
+            document.documentElement.style.setProperty('--theme-color', color);
+            if (imageSrc) {
+                document.body.style.setProperty('--bg-image', `url(${imageSrc})`);
+            }
+        }
+
+        // Keep current cache safe on initial browser processing load
+        window.onload = () => {
+            const savedColor = localStorage.getItem('themeColor');
+            const savedPhoto = localStorage.getItem('birthdayPhoto');
+            if (savedColor) {
+                applyTheme(savedColor, savedPhoto);
+            }
+        };
+    </script>
+</body>
+</html>

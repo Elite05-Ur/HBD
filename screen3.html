@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Surprise Gift! 🎁</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Fredoka+One&family=Quicksand:wght@600;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body { 
+            background: #fff0f5; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: flex-start; /* Niche scroll ho ske isliye top se start kiya */
+            min-height: 100vh; 
+            font-family: 'Quicksand', sans-serif; 
+            color: #ff69b4; 
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto; /* FIXED: Ab full smooth scroll hoga mobile par! */
+            padding: 30px 15px;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: var(--bg-image, none);
+            background-size: cover;
+            background-position: center;
+            filter: blur(15px) saturate(1.5) opacity(0.5);
+            z-index: -2;
+            position: fixed; /* Background ek jagah fix rahega aur card scroll hoga */
+        }
+
+        .celebrate-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+            color: #ff4791;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .card-container {
+            position: relative;
+            max-width: 480px;
+            width: 100%;
+            border-radius: 24px;
+            padding: 22px; 
+            box-shadow: 0 15px 35px rgba(255, 105, 180, 0.2);
+            margin-bottom: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            overflow: hidden;
+        }
+
+        .card-bg-blur {
+            position: absolute;
+            inset: 0;
+            background-image: var(--bg-image, none);
+            background-size: cover;
+            background-position: center;
+            filter: blur(25px) brightness(1.05); 
+            border-radius: 22px;
+            z-index: -1;
+        }
+
+        .card-bg-blur::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Responsive Mobile Grid Layout */
+        .card-grid {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1fr 160px; /* Clean structured right alignment */
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Mobile Perfect Text Size */
+        .card-text {
+            font-family: 'Caveat', cursive;
+            font-size: 1.35rem;
+            color: #b8004f;
+            line-height: 1.4;
+        }
+
+        /* Polaroid Photo - Normal & Beautifully Big Size */
+        .taped-photo-frame {
+            position: relative;
+            transform: rotate(4deg); 
+            width: 160px; 
+            height: 195px; 
+            background: #ffffff;
+            padding: 6px 6px 20px 6px; 
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+            justify-self: end;
+        }
+
+        .taped-photo-frame::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-8deg);
+            width: 60px;
+            height: 15px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(1px);
+            border-left: 1px dashed rgba(0,0,0,0.08);
+            border-right: 1px dashed rgba(0,0,0,0.08);
+            z-index: 6;
+        }
+
+        .taped-photo-frame img {
+            width: 100%;
+            height: 165px;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+
+        .emoji-lg {
+            font-size: 1.8rem;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .emoji-md {
+            font-size: 1.4rem;
+            display: inline-block;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #ff69b4, #ff4791);
+            color: #ffffff;
+            border: none;
+            padding: 14px 35px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255, 71, 145, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10;
+            margin-bottom: 20px; /* Extra margin for safe touch zone on screens */
+        }
+
+        /* Mobile specific adjustments */
+        @media (max-width: 480px) {
+            .card-grid {
+                grid-template-columns: 1fr 130px; 
+                gap: 12px;
+            }
+            .taped-photo-frame {
+                width: 130px;
+                height: 165px;
+                padding-bottom: 15px;
+            }
+            .taped-photo-frame img {
+                height: 140px;
+            }
+            .card-text {
+                font-size: 1.25rem;
+            }
+            .celebrate-title { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+<h1 class="celebrate-title">Happy Birth Day Ayesha🙂</h1>
+
+<div class="card-container" id="gift-card">
+    <div class="card-bg-blur"></div>
+
+    <div class="card-grid">
+        <!-- Left Side: Clean Compact Birthday Wishes -->
+        <div class="card-text">
+            Allah ap ko bhtttt sari kushia ata farmyia<span class="emoji-lg">🙂</span><br><br>
+            r wo sb dy jis ke ap na khawaish ke <span class="emoji-md">✨</span> <br><br>
+            r ap ko bhttt kamyiab kry r ap k naseeb achy kr bhttt zada wlyy <span class="emoji-lg">⭐</span> Aj ap 20 Years k ho gye ho.. allah ap ko lambi zandagi dy r...ap k lyia ana wal sal bhtt kushio bhara hoo wo sb ho jo ap na chaha r apk lyia bather hoo 🙂🙂 bolo... AMEEN 
+        </div>
+
+        <!-- Right Side: Big Clear Tilted Photo Frame -->
+        <div class="taped-photo-frame">
+            <img id="user-memory" src="" alt="Pookie's Memory">
+        </div>
+    </div>
+</div>
+
+<button class="download-btn" onclick="downloadYourCard()">
+    Download Card 📥
+</button>
+
+<script>
+    const storedPhoto = localStorage.getItem('birthdayPhoto');
+    const userImgElement = document.getElementById('user-memory');
+
+    if (storedPhoto) {
+        document.body.style.setProperty('--bg-image', `url(${storedPhoto})`);
+        userImgElement.src = storedPhoto;
+    } else {
+        userImgElement.src = "https://via.placeholder.com/150/ffb6c1/ffffff?text=Pookie+⭐";
+    }
+
+    function downloadYourCard() {
+        const targetCard = document.getElementById('gift-card');
+        const actionButton = document.querySelector('.download-btn');
+        
+        actionButton.innerText = "Saving... ⏳";
+        actionButton.style.opacity = "0.7";
+
+        html2canvas(targetCard, {
+            useCORS: true,
+            allowTaint: true,
+            scale: 2, 
+            backgroundColor: null 
+        }).then(canvas => {
+            const imageURL = canvas.toDataURL("image/png");
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.href = imageURL;
+            downloadAnchor.download = 'pookies_gift_card.png';
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            document.body.removeChild(downloadAnchor);
+
+            actionButton.innerText = "Download Card 📥";
+            actionButton.style.opacity = "1";
+        }).catch(err => {
+            console.error("Download error: ", err);
+            actionButton.innerText = "Error! 🥺";
+            setTimeout(() => { actionButton.innerText = "Download Card 📥"; }, 2000);
+        });
+    }
+</script>
+
+</body>
+</html>
